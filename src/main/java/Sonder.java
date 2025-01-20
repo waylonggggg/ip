@@ -1,8 +1,6 @@
 import java.util.Scanner;
 
 public class Sonder {
-    private static String[] list = new String[100];
-    private static int index = 0;
 
     public static void main(String[] args) {
         String message = "____________________________________________________________\n"
@@ -13,7 +11,7 @@ public class Sonder {
 
         Scanner sc = new Scanner(System.in);
 
-        // List inputs
+        // Dealing with user inputs
         while (true) {
             String input = sc.nextLine();
 
@@ -25,13 +23,39 @@ public class Sonder {
                 );
                 break;
             } else if (input.equalsIgnoreCase("list")) {
-                for (int i = 0; i < index; i++) {
-                    System.out.println(String.format("%d." + list[i], i + 1));
+                Task.getList();
+            } else if (input.startsWith("mark ")) {
+                try {
+                    int index = Integer.parseInt(input.split(" ")[1]);
+
+                    if (index > 0 && index <= Task.getTaskListSize()) {
+                        Task.setDone(index - 1);
+                    } else {
+                        System.out.println("Choose a valid number please!");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("You forgot to pick a number!");
+                } catch (NumberFormatException e) {
+                    System.out.println("Input numbers only please!");
+                }
+            } else if (input.startsWith("unmark ")) {
+                try {
+                    int index = Integer.parseInt(input.split(" ")[1]);
+
+                    if (index > 0 && index <= Task.getTaskListSize()) {
+                        Task.setUndone(index - 1);
+                    } else {
+                        System.out.println("Choose a valid number please!");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("You forgot to pick a number!");
+                } catch (NumberFormatException e) {
+                    System.out.println("Input numbers only please!");
                 }
             } else {
                 System.out.println("added: " + input);
-                list[index] = input;
-                index++;
+                Task t = new Task(input);
+                Task.addTask(t);
             }
         }
     }
