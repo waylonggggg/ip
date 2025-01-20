@@ -14,48 +14,60 @@ public class Sonder {
         // Dealing with user inputs
         while (true) {
             String input = sc.nextLine();
+            String[] inputArr = input.split("\\s+");
+            String command = inputArr[0].toLowerCase();
+            int length = inputArr.length;
 
-            if (input.equalsIgnoreCase("bye")) {
-                System.out.println(
-                        "____________________________________________________________\n"
-                                + "Bye. Hope to see you again soon!\n"
-                                + "____________________________________________________________"
+            switch (command) {
+            case "bye":
+                System.out.println("____________________________________________________________\n"
+                            + "Bye. Hope to see you again soon!\n"
+                            + "____________________________________________________________"
                 );
                 break;
-            } else if (input.equalsIgnoreCase("list")) {
+
+            case "list":
+                if (Task.getTaskListSize() == 0) {
+                    System.out.println("Your list is empty!");
+                }
                 Task.getList();
-            } else if (input.startsWith("mark ")) {
-                try {
-                    int index = Integer.parseInt(input.split(" ")[1]);
+                break;
 
-                    if (index > 0 && index <= Task.getTaskListSize()) {
-                        Task.setDone(index - 1);
-                    } else {
-                        System.out.println("Choose a valid number please!");
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("You forgot to pick a number!");
-                } catch (NumberFormatException e) {
-                    System.out.println("Input numbers only please!");
-                }
-            } else if (input.startsWith("unmark ")) {
-                try {
-                    int index = Integer.parseInt(input.split(" ")[1]);
+            case "mark":
+                 markHelper("mark", inputArr, length);
+                 break;
 
-                    if (index > 0 && index <= Task.getTaskListSize()) {
-                        Task.setUndone(index - 1);
-                    } else {
-                        System.out.println("Choose a valid number please!");
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("You forgot to pick a number!");
-                } catch (NumberFormatException e) {
-                    System.out.println("Input numbers only please!");
-                }
-            } else {
+            case "unmark":
+                markHelper("unmark", inputArr, length);
+                break;
+
+            default:
                 System.out.println("added: " + input);
                 Task t = new Task(input);
                 Task.addTask(t);
+            }
+        }
+    }
+
+    public static void markHelper(String action, String[] arr, int len) {
+        if (len == 1) {
+            System.out.println("Please input a number!");
+        } else if (len > 2) {
+            System.out.println("Invalid Input");
+        } else {
+            try {
+                int index = Integer.parseInt(arr[1]);
+                if (index > 0 && index <= Task.getTaskListSize()) {
+                    if (action.equals("mark")) {
+                        Task.setDone(index - 1);
+                    } else if (action.equals("unmark")) {
+                        Task.setUndone(index - 1);
+                    }
+                } else {
+                    System.out.println("Choose a valid number please!");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Input numbers only please!");
             }
         }
     }

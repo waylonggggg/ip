@@ -44,6 +44,10 @@ public class Task {
         return taskList.size();
     }
 
+//    public String getTypeIcon() {
+//        if (this instanceof )
+//    }
+
     public static void getList() {
         for (int i = 0; i < taskList.size(); i++) {
             String line = String.format("%d. [%s] %s", i + 1, taskList.get(i).getStatusIcon(),
