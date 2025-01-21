@@ -24,7 +24,7 @@ public class Sonder {
                             + "Bye. Hope to see you again soon!\n"
                             + "____________________________________________________________"
                 );
-                break;
+                return;
 
             case "list":
                 if (Task.getTaskListSize() == 0) {
@@ -41,14 +41,24 @@ public class Sonder {
                 markHelper("unmark", inputArr, length);
                 break;
 
+            case "todo":
+                taskHelper("todo", input, inputArr, length);
+                break;
+            case "deadline":
+                taskHelper("deadline", input, inputArr, length);
+                break;
+            case "event":
+                taskHelper("event", input, inputArr, length);
+                break;
+
             default:
-                System.out.println("added: " + input);
-                Task t = new Task(input);
-                Task.addTask(t);
+                System.out.println("I don't know what that means. Sorry! :(");
+
             }
         }
     }
 
+    // Helper function for marking and unmarking
     public static void markHelper(String action, String[] arr, int len) {
         if (len == 1) {
             System.out.println("Please input a number!");
@@ -68,6 +78,47 @@ public class Sonder {
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Input numbers only please!");
+            }
+        }
+    }
+
+    // Helper function for adding tasks
+    public static void taskHelper(String action, String input, String[] arr, int len) {
+        if (len == 1) {
+            System.out.println("Please input a task!");
+        } else {
+            if (action.equals("todo")) {
+                String task = input.substring(5).trim();
+                Task.addTask(new Todo(task));
+            } else if (action.equals("deadline")) {
+                if (input.contains("/by ")) {
+                    String[] split = input.split("/by");
+                    String task = split[0].substring(9).trim();
+                    String deadline = split[1].trim();
+                    if (!deadline.equals("")) {
+                        Task.addTask(new Deadline(task, deadline));
+                    } else {
+                        System.out.println("Please include a due date!");
+                    }
+                } else {
+                    System.out.println("Please include a due date!");
+                }
+            } else if (action.equals("event")) {
+                if (input.contains("/from ") && input.contains("/to ")) {
+                    String[] split = input.split("\\/from|\\/to");
+                    String task = split[0].substring(6);
+                    String start = split[1].trim();
+                    String end = split[2].trim();
+                    if (!start.equals("") && !end.equals("")) {
+                        Task.addTask(new Event(task, start, end));
+                    } else {
+                        System.out.println("You did not input a start and/or end date!");
+                    }
+                } else if (input.contains("/from ")) {
+                    System.out.println("Please include an end date/time");
+                } else if (input.contains("/to ")) {
+                    System.out.println("Please include a start date/time");
+                }
             }
         }
     }

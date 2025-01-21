@@ -12,14 +12,18 @@ public class Task {
 
     public static void addTask(Task t) {
         taskList.add(t);
+        System.out.println("____________________________________________________________\n"
+                + "Got it. I've added this task:\n"
+                + t.toString() + "\n"
+                + String.format("Now you have %d tasks in the list", getTaskListSize())
+        );
     }
 
     public static void setDone(int index) {
         taskList.get(index).isDone = true;
         System.out.println("____________________________________________________________\n"
                 + "Nice! I've marked this task as done:\n"
-                + String.format("%d. [%s] %s", index + 1, taskList.get(index).getStatusIcon(),
-                        taskList.get(index).getDescription())
+                + taskList.get(index)
         );
     }
 
@@ -27,8 +31,7 @@ public class Task {
         taskList.get(index).isDone = false;
         System.out.println("____________________________________________________________\n"
                 + "OK, I've marked this task as not done yet:\n"
-                + String.format("%d. [%s] %s", index + 1, taskList.get(index).getStatusIcon(),
-                taskList.get(index).getDescription())
+                + taskList.get(index)
         );
     }
 
@@ -49,10 +52,18 @@ public class Task {
 //    }
 
     public static void getList() {
-        for (int i = 0; i < taskList.size(); i++) {
-            String line = String.format("%d. [%s] %s", i + 1, taskList.get(i).getStatusIcon(),
-                    taskList.get(i).getDescription());
-            System.out.println(line);
+        for (int i = 1; i <= getTaskListSize(); i++) {
+            System.out.println(i + ". " + taskList.get(i - 1));
         }
+    }
+
+    public void addTaskHelper(Task task) {
+
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s", this.getStatusIcon(),
+                this.getDescription());
     }
 }

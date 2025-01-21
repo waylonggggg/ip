@@ -1,7 +1,14 @@
-//public class Deadline extends Task {
-//    private String deadline;
-//
-//    public Deadline(String description, String deadline) {
-//
-//    }
-//}
+public class Deadline extends Task {
+
+    private String by;
+
+    public Deadline(String description, String by) {
+        super(description);
+        this.by = by;
+    }
+
+    @Override
+    public String toString() {
+        return "[D]" + super.toString() + " (by: " + by + ")";
+    }
+}
