@@ -1,0 +1,21 @@
+list
+jkfhdf
+todo
+todo run
+deadline
+deadline cook
+deadline cook /by
+deadline cook /by dsds
+list
+mark 1
+mark 2
+list
+unmark 2
+event
+event basketball
+event basketball /from
+event basketball /from 2 pm
+event basketball /to
+event basketball /to 4 pm
+event basketball /from 2 pm /to 4 pm
+list
