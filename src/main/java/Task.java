@@ -15,7 +15,8 @@ public class Task {
         System.out.println("____________________________________________________________\n"
                 + "Got it. I've added this task:\n"
                 + t.toString() + "\n"
-                + String.format("Now you have %d tasks in the list", getTaskListSize())
+                + String.format("Now you have %d tasks in the list", getTaskListSize()) + "\n"
+                + "____________________________________________________________"
         );
     }
 
@@ -23,7 +24,8 @@ public class Task {
         taskList.get(index).isDone = true;
         System.out.println("____________________________________________________________\n"
                 + "Nice! I've marked this task as done:\n"
-                + taskList.get(index)
+                + taskList.get(index) + "\n"
+                + "____________________________________________________________"
         );
     }
 
@@ -31,7 +33,19 @@ public class Task {
         taskList.get(index).isDone = false;
         System.out.println("____________________________________________________________\n"
                 + "OK, I've marked this task as not done yet:\n"
-                + taskList.get(index)
+                + taskList.get(index) + "\n"
+                + "____________________________________________________________"
+        );
+    }
+
+    public static void delete(int index) {
+        String oldTask = taskList.get(index).toString();
+        taskList.remove(index);
+        System.out.println("____________________________________________________________\n"
+                + "Noted. I've removed this task:\n"
+                + oldTask + "\n"
+                + String.format("Now you have %d tasks in the list\n", getTaskListSize())
+                + "____________________________________________________________"
         );
     }
 
@@ -52,9 +66,11 @@ public class Task {
 //    }
 
     public static void getList() {
+        System.out.println("____________________________________________________________");
         for (int i = 1; i <= getTaskListSize(); i++) {
             System.out.println(i + ". " + taskList.get(i - 1));
         }
+        System.out.println("____________________________________________________________");
     }
 
     public void addTaskHelper(Task task) {

@@ -1,4 +1,5 @@
-package PACKAGE_NAME;
-
-public class SonderException {
+public class SonderException extends Exception{
+    public SonderException(String message) {
+        super(message);
+    }
 }

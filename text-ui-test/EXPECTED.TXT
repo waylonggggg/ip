@@ -2,7 +2,6 @@ ____________________________________________________________
 Hello! I'm Sonder!
 What can I do for you!
 ____________________________________________________________
-
 Your list is empty!
 I don't know what that means. Sorry! :(
 Please input a task!
@@ -10,6 +9,7 @@ ____________________________________________________________
 Got it. I've added this task:
 [T][ ] run
 Now you have 1 tasks in the list
+____________________________________________________________
 Please input a task!
 Please include a due date!
 Please include a due date!
@@ -17,19 +17,29 @@ ____________________________________________________________
 Got it. I've added this task:
 [D][ ] cook (by: dsds)
 Now you have 2 tasks in the list
+____________________________________________________________
+____________________________________________________________
 1. [T][ ] run
 2. [D][ ] cook (by: dsds)
+____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
 [T][X] run
 ____________________________________________________________
+Invalid Input
+____________________________________________________________
 Nice! I've marked this task as done:
 [D][X] cook (by: dsds)
+____________________________________________________________
+____________________________________________________________
 1. [T][X] run
 2. [D][X] cook (by: dsds)
 ____________________________________________________________
+Invalid Input
+____________________________________________________________
 OK, I've marked this task as not done yet:
 [D][ ] cook (by: dsds)
+____________________________________________________________
 Please input a task!
 Please include a start and end date/time
 Please include a start and end date/time
@@ -38,8 +48,22 @@ Please include a start and end date/time
 Please include a start date/time
 ____________________________________________________________
 Got it. I've added this task:
-[E][ ] basketball  (from: 2 pm to: 4 pm)
+[E][ ] basketball (from: 2 pm to: 4 pm)
 Now you have 3 tasks in the list
+____________________________________________________________
+____________________________________________________________
 1. [T][X] run
 2. [D][ ] cook (by: dsds)
-3. [E][ ] basketball  (from: 2 pm to: 4 pm)
+3. [E][ ] basketball (from: 2 pm to: 4 pm)
+____________________________________________________________
+Please input a number!
+Invalid input!
+____________________________________________________________
+Noted. I've removed this task:
+[E][ ] basketball (from: 2 pm to: 4 pm)
+Now you have 2 tasks in the list
+____________________________________________________________
+____________________________________________________________
+1. [T][X] run
+2. [D][ ] cook (by: dsds)
+____________________________________________________________
