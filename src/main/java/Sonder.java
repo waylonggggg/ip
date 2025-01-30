@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Sonder {
@@ -11,6 +13,12 @@ public class Sonder {
 
         Scanner sc = new Scanner(System.in);
 
+        // Initialise list
+        Task.listInitialiser();
+
+        // Intialise file
+        Task.fileDirChecker();
+
         // Dealing with user inputs
         while (true) {
             try {
@@ -20,45 +28,49 @@ public class Sonder {
                 int length = inputArr.length;
 
                 switch (command) {
-                    case "bye":
-                        System.out.println("____________________________________________________________\n"
-                                + "Bye. Hope to see you again soon!\n"
-                                + "____________________________________________________________"
-                        );
-                        return;
+                case "bye":
+                    System.out.println("____________________________________________________________\n"
+                            + "Bye. Hope to see you again soon!\n"
+                            + "____________________________________________________________"
+                    );
+                    return;
 
-                    case "list":
-                        if (Task.getTaskListSize() == 0) {
-                            throw new SonderException("Your list is empty!");
-                        }
-                        Task.getList();
-                        break;
+                case "list":
+                    if (Task.getTaskListSize() == 0) {
+                        throw new SonderException("Your list is empty!");
+                    }
+                    Task.getList();
+                    break;
 
-                    case "mark":
-                        markHelper("mark", inputArr, length);
-                        break;
+                case "mark":
+                    markHelper("mark", inputArr, length);
+                    break;
 
-                    case "unmark":
-                        markHelper("unmark", inputArr, length);
-                        break;
+                case "unmark":
+                    markHelper("unmark", inputArr, length);
+                    break;
 
-                    case "todo":
-                        taskHelper("todo", input, inputArr, length);
-                        break;
-                    case "deadline":
-                        taskHelper("deadline", input, inputArr, length);
-                        break;
-                    case "event":
-                        taskHelper("event", input, inputArr, length);
-                        break;
-                    case "delete":
-                        deleteHelper(inputArr, length);
-                        break;
-                    default:
-                        throw new SonderException("I don't know what that means. Sorry! :(");
+                case "todo":
+                    taskHelper("todo", input, inputArr, length);
+                    break;
+                case "deadline":
+                    taskHelper("deadline", input, inputArr, length);
+                    break;
+                case "event":
+                    taskHelper("event", input, inputArr, length);
+                    break;
+                case "delete":
+                    deleteHelper(inputArr, length);
+                    break;
+                default:
+                    throw new SonderException("I don't know what that means. Sorry! :(");
                 }
             } catch (SonderException e) {
                 System.out.println(e.getMessage());
+            } catch (FileNotFoundException e) { // Subclass of IOException
+                System.out.println("File not found: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Error occurred while creating file: " + e.getMessage());
             }
         }
     }
@@ -88,20 +100,20 @@ public class Sonder {
     }
 
     // Helper function for adding tasks
-    public static void taskHelper(String action, String input, String[] arr, int len) throws SonderException {
+    public static void taskHelper(String action, String input, String[] arr, int len) throws SonderException, IOException {
         if (len == 1) {
             throw new SonderException("Please input a task!");
         } else {
             if (action.equals("todo")) {
                 String task = input.substring(5).trim();
-                Task.addTask(new Todo(task));
+                Task.addTask(new Todo(task, false));
             } else if (action.equals("deadline")) {
                 if (input.contains("/by ")) {
                     String[] split = input.split("/by");
                     String task = split[0].substring(9).trim();
                     String deadline = split[1].trim();
                     if (!deadline.equals("")) {
-                        Task.addTask(new Deadline(task, deadline));
+                        Task.addTask(new Deadline(task, false, deadline));
                     } else {
                         throw new SonderException("Please include a due date!");
                     }
@@ -115,7 +127,7 @@ public class Sonder {
                     String start = split[1].trim();
                     String end = split[2].trim();
                     if (!start.equals("") && !end.equals("")) {
-                        Task.addTask(new Event(task, start, end));
+                        Task.addTask(new Event(task, false, start, end));
                     } else {
                         throw new SonderException("You did not input a start and/or end date!");
                     }
