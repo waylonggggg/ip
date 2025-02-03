@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -147,20 +149,21 @@ public class Task {
                 while (sc.hasNext()) {
                     String[] taskArr = sc.nextLine().split("\\|");
                     String type = taskArr[0].trim();
-                    String isDone = taskArr[1].trim();
+                    boolean isDone = taskArr[1].trim().equals("0") ? false : true;
                     String desc = taskArr[2].trim();
                     if (type.equals("T")) {
-                        taskList.add(new Todo(desc, false));
+                        taskList.add(new Todo(desc, isDone));
                     } else if (type.equals("D")) {
-                        String by = taskArr[3].substring(5);
-                        taskList.add(new Deadline(desc, false, by));
+                        LocalDate by = LocalDate.parse(taskArr[3].substring(5), DateTimeFormatter.ofPattern("MMM dd yyyy"));
+                        taskList.add(new Deadline(desc, isDone, by));
                     } else if (type.equals("E")) {
-                        String start = taskArr[3].substring(7);
-                        String end = taskArr[4].substring(5);
-                        taskList.add(new Event(desc, false, start, end));
+                        LocalDate start = LocalDate.parse(taskArr[3].substring(7), DateTimeFormatter.ofPattern("MMM dd yyyy"));
+                        LocalDate end = LocalDate.parse(taskArr[4].substring(5), DateTimeFormatter.ofPattern("MMM dd yyyy"));
+                        taskList.add(new Event(desc, isDone, start, end));
                     }
                 }
             }
+            System.out.println(taskList);
         } catch (IOException e) {
             System.out.println("IO error occurred: " + e.getMessage());
         }

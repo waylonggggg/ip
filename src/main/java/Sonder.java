@@ -1,6 +1,9 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import java.time.LocalDateTime;
 
 public class Sonder {
 
@@ -71,6 +74,8 @@ public class Sonder {
                 System.out.println("File not found: " + e.getMessage());
             } catch (IOException e) {
                 System.out.println("Error occurred while creating file: " + e.getMessage());
+            } catch (DateTimeParseException e) {
+                System.out.println("Please enter a valid date!" + e.getMessage());
             }
         }
     }
@@ -113,7 +118,12 @@ public class Sonder {
                     String task = split[0].substring(9).trim();
                     String deadline = split[1].trim();
                     if (!deadline.equals("")) {
-                        Task.addTask(new Deadline(task, false, deadline));
+                        if (isValidDate(deadline)) {
+                            LocalDate date = LocalDate.parse(deadline);
+                            Task.addTask(new Deadline(task, false, date));
+                        } else {
+                            throw new SonderException("Please include a valid due date!");
+                        }
                     } else {
                         throw new SonderException("Please include a due date!");
                     }
@@ -127,7 +137,13 @@ public class Sonder {
                     String start = split[1].trim();
                     String end = split[2].trim();
                     if (!start.equals("") && !end.equals("")) {
-                        Task.addTask(new Event(task, false, start, end));
+                        if (isValidStartAndEnd(start, end)) {
+                            LocalDate startDate = LocalDate.parse(start);
+                            LocalDate endDate = LocalDate.parse(end);
+                            Task.addTask(new Event(task, false, startDate, endDate));
+                        } else {
+                            throw new SonderException("Please include a valid start/end date!");
+                        }
                     } else {
                         throw new SonderException("You did not input a start and/or end date!");
                     }
@@ -159,5 +175,50 @@ public class Sonder {
                 throw new SonderException("Input numbers only please!");
             }
         }
+    }
+
+    public static boolean isValidDate(String input) {
+        if (input.contains("-")) {
+            String[] inputArr = input.split("-");
+            int yearDigits = inputArr[0].length();
+            int monthDigits = inputArr[1].length();
+            int dayDigits = inputArr[2].length();
+            if ((yearDigits == 4) && (monthDigits == 2) && (dayDigits == 2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isValidStartAndEnd(String input1, String input2) {
+        if (input1.contains("-") && input2.contains("-")) {
+            String[] inputArr1 = input1.split("-");
+            int year1 = Integer.parseInt(inputArr1[0]);
+            int month1 = Integer.parseInt(inputArr1[1]);
+            int day1 = Integer.parseInt(inputArr1[2]);
+            int yearDigits1 = inputArr1[0].length();
+            int monthDigits1 = inputArr1[1].length();
+            int dayDigits1 = inputArr1[2].length();
+
+            String[] inputArr2 = input2.split("-");
+            int year2 = Integer.parseInt(inputArr2[0]);
+            int month2 = Integer.parseInt(inputArr2[1]);
+            int day2 = Integer.parseInt(inputArr2[2]);
+            int yearDigits2 = inputArr2[0].length();
+            int monthDigits2 = inputArr2[1].length();
+            int dayDigits2 = inputArr2[2].length();
+            if ((yearDigits1 == 4) && (monthDigits1 == 2) && (dayDigits1 == 2)
+                    && (yearDigits2 == 4) && (monthDigits2 == 2) && (dayDigits2 == 2)) {
+                if (year1 > year2) {
+                    return false;
+                } else if (month1 > month2) {
+                    return false;
+                } else if (day1 > day2) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
