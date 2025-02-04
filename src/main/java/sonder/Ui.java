@@ -1,3 +1,5 @@
+package sonder;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -9,7 +11,7 @@ public class Ui {
 
     public void welcomeMessage() {
         String message = "____________________________________________________________\n"
-                + "Hello! I'm Sonder!\n"
+                + "Hello! I'm sonder.Sonder!\n"
                 + "What can I do for you!\n"
                 + "____________________________________________________________";
         System.out.println(message);

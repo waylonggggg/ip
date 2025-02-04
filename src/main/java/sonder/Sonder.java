@@ -1,6 +1,7 @@
+package sonder;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class Sonder {
@@ -18,7 +19,7 @@ public class Sonder {
             //Initialise storage files
             storage.fileDirChecker();
 
-            //Initialise new TaskList and load tasks from txt
+            //Initialise new sonder.TaskList and load tasks from txt
             tasks = new TaskList(storage.load());
         } catch (Exception e) {
             ui.showErrorMessage(e.getMessage());
