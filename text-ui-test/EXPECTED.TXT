@@ -2,68 +2,96 @@ ____________________________________________________________
 Hello! I'm Sonder!
 What can I do for you!
 ____________________________________________________________
-Your list is empty!
-I don't know what that means. Sorry! :(
-Please input a task!
+____________________________________________________________
+1. T | 1 | run
+2. T | 0 | run
+3. T | 0 | run
+4. D | 0 | cook | by: Oct 10 2024
+5. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
+____________________________________________________________
+Error: I don't know what that means. Sorry! :(
+Error: Please input a task!
 ____________________________________________________________
 Got it. I've added this task:
-[T][ ] run
-Now you have 1 tasks in the list
+T | 0 | run
+Now you have 6 tasks in the list
 ____________________________________________________________
-Please input a task!
-Please include a due date!
-Please include a due date!
+Error: Please input a task!
+Error: Please include a due date!
+Error: Please include a valid due date!
 ____________________________________________________________
 Got it. I've added this task:
-[D][ ] cook (by: dsds)
-Now you have 2 tasks in the list
+D | 0 | cook | by: Oct 10 2024
+Now you have 7 tasks in the list
 ____________________________________________________________
 ____________________________________________________________
-1. [T][ ] run
-2. [D][ ] cook (by: dsds)
+1. T | 1 | run
+2. T | 0 | run
+3. T | 0 | run
+4. D | 0 | cook | by: Oct 10 2024
+5. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
+6. T | 0 | run
+7. D | 0 | cook | by: Oct 10 2024
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-[T][X] run
+T | 0 | run
 ____________________________________________________________
-Invalid Input
+Error: Invalid Input
 ____________________________________________________________
 Nice! I've marked this task as done:
-[D][X] cook (by: dsds)
+T | 0 | run
 ____________________________________________________________
 ____________________________________________________________
-1. [T][X] run
-2. [D][X] cook (by: dsds)
+1. T | 1 | run
+2. T | 1 | run
+3. T | 0 | run
+4. D | 0 | cook | by: Oct 10 2024
+5. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
+6. T | 0 | run
+7. D | 0 | cook | by: Oct 10 2024
 ____________________________________________________________
-Invalid Input
+Error: Invalid Input
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-[D][ ] cook (by: dsds)
+T | 0 | run
 ____________________________________________________________
-Please input a task!
-Please include a start and end date/time
-Please include a start and end date/time
-Please include an end date/time
-Please include a start and end date/time
-Please include a start date/time
+Error: Please input a task!
+Error: Please include a start and end date/time
+Error: Please include a start and end date/time
+Error: Please include an end date/time
+Error: Please include a start and end date/time
+Error: Please include a start date/time
+Error: Please include a valid start/end date!
+Error: Please include a valid start/end date!
 ____________________________________________________________
 Got it. I've added this task:
-[E][ ] basketball (from: 2 pm to: 4 pm)
-Now you have 3 tasks in the list
+E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
+Now you have 8 tasks in the list
 ____________________________________________________________
 ____________________________________________________________
-1. [T][X] run
-2. [D][ ] cook (by: dsds)
-3. [E][ ] basketball (from: 2 pm to: 4 pm)
+1. T | 1 | run
+2. T | 0 | run
+3. T | 0 | run
+4. D | 0 | cook | by: Oct 10 2024
+5. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
+6. T | 0 | run
+7. D | 0 | cook | by: Oct 10 2024
+8. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
 ____________________________________________________________
-Please input a number!
-Invalid input!
+Error: Please input a number!
+Error: Invalid input!
 ____________________________________________________________
 Noted. I've removed this task:
-[E][ ] basketball (from: 2 pm to: 4 pm)
-Now you have 2 tasks in the list
+T | 0 | run
+Now you have 7 tasks in the list
 ____________________________________________________________
 ____________________________________________________________
-1. [T][X] run
-2. [D][ ] cook (by: dsds)
+1. T | 1 | run
+2. T | 0 | run
+3. D | 0 | cook | by: Oct 10 2024
+4. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
+5. T | 0 | run
+6. D | 0 | cook | by: Oct 10 2024
+7. E | 0 | basketball | from: Sep 09 2024 | to: Sep 09 2025
 ____________________________________________________________
