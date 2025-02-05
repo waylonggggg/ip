@@ -14,7 +14,10 @@ src/main/resources/docs/
 bin/
 
 #local list file
-/data
+/data/
+
+#javadocs test
+/javadocs/
 
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
