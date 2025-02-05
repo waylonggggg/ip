@@ -3,6 +3,7 @@ package sonder;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 public class Sonder {
 
@@ -12,19 +13,20 @@ public class Sonder {
     private Parser parser;
 
     public Sonder(String filePath) {
-        ui = new Ui();
-        storage = new Storage(filePath);
+        this.ui = new Ui();
+        this.storage = new Storage(filePath);
+        this.tasks = initialiseTaskList();
+        this.parser = new Parser(tasks, ui, storage);
+    }
 
+    private TaskList initialiseTaskList() {
         try {
-            //Initialise storage files
             storage.fileDirChecker();
-
-            //Initialise new sonder.TaskList and load tasks from txt
-            tasks = new TaskList(storage.load());
+            return new TaskList(storage.load());
         } catch (Exception e) {
-            ui.showErrorMessage(e.getMessage());
+            ui.showErrorMessage("Initialization error: " + e.getMessage());
+            return new TaskList(new ArrayList<Task>()); // Return an empty task list
         }
-        parser = new Parser(tasks, ui, storage);
     }
 
     public void run() {
@@ -32,22 +34,29 @@ public class Sonder {
 
         while (true) {
             try {
-                String input = ui.getUserInput();
+                String input = ui.getUserInput().trim();
                 String[] inputArr = input.split("\\s+");
                 String command = inputArr[0].toLowerCase();
                 int length = inputArr.length;
 
-                //Deal with user inputs
                 parser.run(input, inputArr, command, length);
-            } catch (SonderException e) {
+            } catch (Exception e) {
                 ui.showErrorMessage(e.getMessage());
-            } catch (FileNotFoundException e) { // Subclass of IOException
-                ui.showErrorMessage("File not found: " + e.getMessage());
-            } catch (IOException e) {
-                ui.showErrorMessage("Error occurred while creating file: " + e.getMessage());
-            } catch (DateTimeParseException e) {
-                ui.showErrorMessage("Please enter a valid date: " + e.getMessage());
             }
+        }
+    }
+
+    private void handleException(Exception e) {
+        if (e instanceof SonderException) {
+            ui.showErrorMessage(e.getMessage());
+        } else if (e instanceof FileNotFoundException) {
+            ui.showErrorMessage("File not found: " + e.getMessage());
+        } else if (e instanceof IOException) {
+            ui.showErrorMessage("Error occurred while accessing file: " + e.getMessage());
+        } else if (e instanceof DateTimeParseException) {
+            ui.showErrorMessage("Please enter a valid date.");
+        } else {
+            ui.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }
 

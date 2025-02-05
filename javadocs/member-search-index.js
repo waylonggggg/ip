@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"sonder","c":"Event","l":"Event(String, boolean, LocalDate, LocalDate)","u":"%3Cinit%3E(java.lang.String,boolean,java.time.LocalDate,java.time.LocalDate)"},{"p":"sonder","c":"Event","l":"getEndDate()"},{"p":"sonder","c":"Event","l":"getStartDate()"},{"p":"sonder","c":"Event","l":"toString()"}];updateSearchResults();
