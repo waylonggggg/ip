@@ -87,7 +87,6 @@ public class Storage {
         default:
         throw new IllegalArgumentException("Invalid task type: " + type);
         }
-        return taskList;
     }
 
     /**
