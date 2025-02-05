@@ -30,37 +30,44 @@ public class Storage {
         }
     }
 
-    public ArrayList<Task> load() {
+    public ArrayList<Task> load() throws IOException {
         String filePath = this.getFilePath();
         ArrayList<Task> taskList = new ArrayList<>();
-        try {
-            File f = new File(filePath);
-            if (f.exists()) {
-                Scanner sc = new Scanner(f);
-                while (sc.hasNext()) {
-                    String[] taskArr = sc.nextLine().split("\\|");
-                    String type = taskArr[0].trim();
-                    boolean isDone = taskArr[1].trim().equals("0") ? false : true;
-                    String desc = taskArr[2].trim();
-                    if (type.equals("T")) {
-                        taskList.add(new Todo(desc, isDone));
-                    } else if (type.equals("D")) {
-                        LocalDate by = LocalDate.parse(taskArr[3].substring(5).trim(),
-                                DateTimeFormatter.ofPattern("MMM dd yyyy"));
-                        taskList.add(new Deadline(desc, isDone, by));
-                    } else if (type.equals("E")) {
-                        LocalDate start = LocalDate.parse(taskArr[3].substring(7).trim(),
-                                DateTimeFormatter.ofPattern("MMM dd yyyy"));
-                        LocalDate end = LocalDate.parse(taskArr[4].substring(5).trim(),
-                                DateTimeFormatter.ofPattern("MMM dd yyyy"));
-                        taskList.add(new Event(desc, isDone, start, end));
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("IO error occurred: " + e.getMessage());
+        File f = new File(filePath);
+
+        if (!f.exists()) {
+            return taskList;
+        }
+
+        Scanner sc = new Scanner(f);
+        while (sc.hasNext()) {
+            taskList.add(parseTask(sc.nextLine()));
         }
         return taskList;
+    }
+
+    private Task parseTask(String line) {
+        String[] taskArr = line.split("\\|");
+        String type = taskArr[0].trim();
+        boolean isDone = taskArr[1].trim().equals("1");
+        String desc = taskArr[2].trim();
+
+        switch (type) {
+        case "T":
+            return new Todo(desc, isDone);
+        case "D":
+            LocalDate by = LocalDate.parse(taskArr[3].substring(5).trim(),
+                    DateTimeFormatter.ofPattern("MMM dd yyyy"));
+            return new Deadline(desc, isDone, by);
+        case "E":
+            LocalDate start = LocalDate.parse(taskArr[3].substring(7).trim(),
+                    DateTimeFormatter.ofPattern("MMM dd yyyy"));
+            LocalDate end = LocalDate.parse(taskArr[4].substring(5).trim(),
+                    DateTimeFormatter.ofPattern("MMM dd yyyy"));
+            return new Event(desc, isDone, start, end);
+        default:
+        throw new IllegalArgumentException("Invalid task type: " + type);
+        }
     }
 
     public void getList() throws FileNotFoundException, IOException {

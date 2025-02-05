@@ -10,7 +10,7 @@ public class TaskList {
         TaskList.taskList = taskList;
     }
 
-    public void addTask(Task t) throws IOException {
+    public void addTask(Task t) {
         taskList.add(t);
     }
 

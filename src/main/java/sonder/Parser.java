@@ -24,10 +24,7 @@ public class Parser {
             return;
 
         case "list":
-            if (TaskList.getTaskListSize() == 0) {
-                throw new SonderException("Your list is empty!");
-            }
-            storage.getList();
+            handleListCommand();
             break;
 
         case "mark":
@@ -59,122 +56,131 @@ public class Parser {
         }
     }
 
+
+    private void handleListCommand() throws SonderException, FileNotFoundException, IOException{
+        if (TaskList.getTaskListSize() == 0) {
+            throw new SonderException("Your list is empty!");
+        }
+        storage.getList();
+    }
+
     // Helper function for marking and unmarking
-    public void markHelper(String action, String[] arr, int len) throws SonderException {
-        if (len == 1) {
-            throw new SonderException("Please input a number!");
-        } else if (len > 2) {
-            throw new SonderException("Invalid Input");
-        } else {
-            try {
-                int index = Integer.parseInt(arr[1]);
-                if (index > 0 && index <= tasks.getTaskListSize()) {
-                    Task task = TaskList.getTask(index - 1);
-                    if (action.equals("mark")) {
-                        task.setDone();
-                        storage.fileListAmendHelper("mark", index - 1);
-                        ui.setDoneMessage(index);
-                    } else if (action.equals("unmark")) {
-                        task.setUndone();
-                        storage.fileListAmendHelper("unmark", index - 1);
-                        ui.setUndoneMessage(index);
-                    }
-                } else {
-                    throw new SonderException("Choose a valid number please!");
-                }
-            } catch (NumberFormatException e) {
-                throw new SonderException("Input numbers only please!");
-            }
+    private void markHelper(String action, String[] arr, int len) throws SonderException {
+        validateSingleIndex(arr, len);
+        int index = Integer.parseInt(arr[1]);
+        validateIndexRange(index);
+
+        Task task = TaskList.getTask(index - 1);
+        if (action.equals("mark")) {
+            task.setDone();
+            storage.fileListAmendHelper("mark", index - 1);
+            ui.setDoneMessage(index);
+        } else if (action.equals("unmark")) {
+            task.setUndone();
+            storage.fileListAmendHelper("unmark", index - 1);
+            ui.setUndoneMessage(index);
         }
     }
 
-    // Helper function for adding tasks
-    public void taskHelper(String action, String input, String[] arr, int len) throws SonderException, IOException {
-        if (len == 1) {
-            throw new SonderException("Please input a task!");
-        } else {
-            if (action.equals("todo")) {
-                String task = input.substring(5).trim();
-                Task t = new Todo(task, false);
-                tasks.addTask(t);
-                storage.appendTask(t);
-                ui.addTaskMessage(t);
-
-            } else if (action.equals("deadline")) {
-                if (input.contains("/by ")) {
-                    String[] split = input.split("/by");
-                    String task = split[0].substring(9).trim();
-                    String deadline = split[1].trim();
-                    if (!deadline.isEmpty()) {
-                        if (isValidDate(deadline)) {
-                            LocalDate date = LocalDate.parse(deadline);
-                            Task t = new Deadline(task, false, date);
-                            tasks.addTask(t);
-                            storage.appendTask(t);
-                            ui.addTaskMessage(t);
-                        } else {
-                            throw new SonderException("Please include a valid due date!");
-                        }
-                    } else {
-                        throw new SonderException("Please include a due date!");
-                    }
-                } else {
-                    throw new SonderException("Please include a due date!");
-                }
-            } else if (action.equals("event")) {
-                if (input.contains("/from ") && input.contains("/to ")) {
-                    String[] split = input.split("\\/from|\\/to");
-                    String task = split[0].substring(6).trim();
-                    String start = split[1].trim();
-                    String end = split[2].trim();
-                    if (!start.equals("") && !end.equals("")) {
-                        if (isValidStartAndEnd(start, end)) {
-                            LocalDate startDate = LocalDate.parse(start);
-                            LocalDate endDate = LocalDate.parse(end);
-                            Task t = new Event(task, false, startDate, endDate);
-                            tasks.addTask(t);
-                            storage.appendTask(t);
-                            ui.addTaskMessage(t);
-                        } else {
-                            throw new SonderException("Please include a valid start/end date!");
-                        }
-                    } else {
-                        throw new SonderException("You did not input a start and/or end date!");
-                    }
-                } else if (input.contains("/from ")) {
-                    throw new SonderException("Please include an end date/time");
-                } else if (input.contains("/to ")) {
-                    throw new SonderException("Please include a start date/time");
-                } else {
-                    throw new SonderException("Please include a start and end date/time");
-                }
-            }
-        }
+    private void validateIndexRange(int index) {
+        if (index <= 0 || index > TaskList.getTaskListSize());
     }
 
-    public void deleteHelper(String[] arr, int len) throws SonderException {
+    private void validateSingleIndex(String[] arr, int len) throws SonderException{
         if (len == 1) {
             throw new SonderException("Please input a number!");
         } else if (len > 2) {
             throw new SonderException("Invalid input!");
-        } else {
-            try {
-                int index = Integer.parseInt(arr[1]);
-                if (index > 0 && index <= tasks.getTaskListSize()) {
-                    String oldTask = TaskList.getTask(index - 1).toString();
-                    tasks.delete(index - 1);
-                    storage.fileListAmendHelper("delete", index - 1);
-                    ui.deleteMessage(oldTask);
-                } else {
-                    throw new SonderException("Choose a valid number please!");
-                }
-            } catch (NumberFormatException e) {
-                throw new SonderException("Input numbers only please!");
-            }
+        } else if (!isNumeric(arr[1])) {
+            throw new SonderException("Input numbers only please");
         }
     }
 
-    public static boolean isValidDate(String input) {
+    private boolean isNumeric(String str) {
+        return str.matches("\\d+");
+    }
+
+    // Helper function for adding tasks
+    private void taskHelper(String action, String input, String[] arr, int len) throws SonderException, IOException {
+        if (len == 1) {
+            throw new SonderException("Please input a task!");
+        }
+        switch (action) {
+        case "todo":
+            addTodoTask(input);
+            break;
+        case "deadline":
+            addDeadlineTask(input);
+            break;
+        case "event":
+            addEventTask(input);
+            break;
+        }
+    }
+
+    private void addTodoTask(String input) throws IOException {
+        String taskDescription = input.substring(5).trim();
+        Task task = new Todo(taskDescription, false);
+        tasks.addTask(task);
+        storage.appendTask(task);
+        ui.addTaskMessage(task);
+    }
+
+    private void addDeadlineTask(String input) throws SonderException, IOException {
+        if (!input.contains("/by ")) {
+            throw new SonderException("Please include a due date!");
+        }
+
+        String[] split = input.split("/by");
+        String taskDescription = split[0].substring(9).trim();
+        String deadline = split[1].trim();
+
+        if (!isValidDate(deadline)) {
+            throw new SonderException("Please include a valid due date!");
+        }
+
+        LocalDate date = LocalDate.parse(deadline);
+        Task task = new Deadline(taskDescription, false, date);
+        tasks.addTask(task);
+        storage.appendTask(task);
+        ui.addTaskMessage(task);
+    }
+
+    private void addEventTask(String input) throws SonderException, IOException {
+        if (!input.contains("/from ") || !input.contains("/to ")) {
+            throw new SonderException("Please include a start and/or end date");
+        }
+
+        String[] split = input.split("\\/from|\\/to");
+        String taskDescription = split[0].substring(6).trim();
+        String start = split[1].trim();
+        String end = split[2].trim();
+
+        if (!isValidStartAndEnd(start, end)) {
+            throw new SonderException("Please include a valid start/end date!");
+        }
+
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        Task task = new Event(taskDescription, false, startDate, endDate);
+        tasks.addTask(task);
+        storage.appendTask(task);
+        ui.addTaskMessage(task);
+    }
+
+    private void deleteHelper(String[] arr, int len) throws SonderException {
+        validateSingleIndex(arr, len);
+        int index = Integer.parseInt(arr[1]);
+        validateIndexRange(len);
+
+        String oldTask = TaskList.getTask(index - 1).toString();
+        tasks.delete(index - 1);
+        storage.fileListAmendHelper("delete", index - 1);
+        ui.deleteMessage(oldTask);
+
+    }
+
+    private static boolean isValidDate(String input) {
         try {
             LocalDate.parse(input);
             return true;
@@ -183,27 +189,8 @@ public class Parser {
         }
     }
 
-    public static boolean isValidStartAndEnd(String input1, String input2) {
-        if (input1.contains("-") && input2.contains("-")) {
-            String[] inputArr1 = input1.split("-");
-            int year1 = Integer.parseInt(inputArr1[0]), month1 = Integer.parseInt(inputArr1[1]),
-                    day1 = Integer.parseInt(inputArr1[2]);
-
-            String[] inputArr2 = input2.split("-");
-            int year2 = Integer.parseInt(inputArr2[0]), month2 = Integer.parseInt(inputArr2[1]),
-                    day2 = Integer.parseInt(inputArr2[2]);
-
-            if (isValidDate(input1) && isValidDate(input2)) {
-                if (year1 > year2) {
-                    return false;
-                } else if (month1 > month2) {
-                    return false;
-                } else if (day1 > day2) {
-                    return false;
-                }
-                return true;
-            }
-        }
-        return false;
+    private static boolean isValidStartAndEnd(String input1, String input2) {
+        return isValidDate(input1) && isValidDate(input2) &&
+                LocalDate.parse(input1).isBefore(LocalDate.parse(input2));
     }
 }
