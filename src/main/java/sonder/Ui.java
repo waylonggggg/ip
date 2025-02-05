@@ -11,7 +11,7 @@ public class Ui {
 
     public void welcomeMessage() {
         String message = "____________________________________________________________\n"
-                + "Hello! I'm sonder.Sonder!\n"
+                + "Hello! I'm Sonder, your personal chatbot!\n"
                 + "What can I do for you!\n"
                 + "____________________________________________________________";
         System.out.println(message);
