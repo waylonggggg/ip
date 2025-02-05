@@ -6,13 +6,26 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles file storage operations for saving and loading tasks from a file.
+ */
 public class Storage {
+
     private final String filePath;
 
+    /**
+     * Constructs a {@code Storage} instance with the specified file path.
+     *
+     * @param filePath The path to the file where tasks will be saved and loaded.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Ensures that the directory and file for storing tasks exist.
+     * If they do not exist, this method creates them.
+     */
     public void fileDirChecker() {
         try {
             File f = new File(this.getFilePath());
@@ -30,6 +43,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from the storage file and returns them as a list.
+     * If the file does not exist or an error occurs, an empty list is returned.
+     *
+     * @return An {@code ArrayList} of tasks loaded from the file.
+     */
     public ArrayList<Task> load() {
         String filePath = this.getFilePath();
         ArrayList<Task> taskList = new ArrayList<>();
@@ -63,6 +82,13 @@ public class Storage {
         return taskList;
     }
 
+    /**
+     * Reads and displays the task list stored in the file.
+     * If the file does not exist, it is created.
+     *
+     * @throws FileNotFoundException If the file is not found.
+     * @throws IOException If an I/O error occurs.
+     */
     public void getList() throws FileNotFoundException, IOException {
         File f = new File("./data/list.txt");
         if (f.exists()) {
@@ -79,6 +105,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Updates or deletes a task entry in the storage file.
+     *
+     * @param action The action to perform ("delete" or update).
+     * @param index The index of the task in the file to update or delete.
+     */
     public void fileListAmendHelper(String action, int index) {
         try {
             BufferedReader file = new BufferedReader(new FileReader(this.getFilePath()));
@@ -112,12 +144,23 @@ public class Storage {
         }
     }
 
+    /**
+     * Appends a new task to the storage file.
+     *
+     * @param t The task to be appended.
+     * @throws IOException If an I/O error occurs while writing to the file.
+     */
     public void appendTask(Task t) throws IOException{
         FileWriter fw = new FileWriter("./data/list.txt", true);
         fw.write(t.toString() + "\n");
         fw.close();
     }
 
+    /**
+     * Returns the file path where tasks are stored.
+     *
+     * @return The file path as a {@code String}.
+     */
     public String getFilePath() {
         return this.filePath;
     }
