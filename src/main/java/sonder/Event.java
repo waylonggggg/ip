@@ -13,6 +13,14 @@ public class Event extends Task{
         this.endDate = endDate;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
     @Override
     public String toString() {
         return "E | " + super.toString() + " | from: "
