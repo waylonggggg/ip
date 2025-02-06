@@ -58,6 +58,18 @@ public class Ui {
         );
     }
 
+    public void findTaskMessage(String input) {
+        if (input.isEmpty()) {
+            System.out.println("Sorry, I couldn't find your task! :(");
+        } else {
+            System.out.println("____________________________________________________________\n"
+                    + "Here are the matching tasks in your list:\n"
+                    + input
+                    + "____________________________________________________________"
+            );
+        }
+    }
+
     public void showErrorMessage(String message) {
         System.out.println("Error: " + message);
     }
