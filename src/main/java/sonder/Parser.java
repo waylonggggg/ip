@@ -30,6 +30,10 @@ public class Parser {
             storage.getList();
             break;
 
+        case "find":
+            ui.findTaskMessage(storage.findTask(input));
+            break;
+
         case "mark":
             this.markHelper("mark", inputArr, length);
             break;

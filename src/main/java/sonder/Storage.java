@@ -118,6 +118,31 @@ public class Storage {
         fw.close();
     }
 
+    public String findTask(String input) throws FileNotFoundException, SonderException {
+        String taskToFind = input.substring(4).trim();
+
+        if (taskToFind.isEmpty()) {
+            throw new SonderException("Please input a task to find!");
+        }
+
+        Scanner sc = new Scanner(new File(getFilePath()));
+        ArrayList<String> taskArr = new ArrayList<>();
+
+        while (sc.hasNext()) {
+            String taskLine = sc.nextLine();
+            if (taskLine.toLowerCase().contains(taskToFind.toLowerCase())) {
+                taskArr.add(taskLine);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < taskArr.size(); i++) {
+            sb.append(i + 1).append(". ").append(taskArr.get(i)).append("\n");
+        }
+
+        return sb.toString();
+    }
+
     public String getFilePath() {
         return this.filePath;
     }
