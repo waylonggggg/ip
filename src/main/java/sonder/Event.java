@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
  * Represents an event task that has a description, completion status,
  * a start date, and an end date. Inherits from the {@code Task} class.
  */
-public class Event extends Task{
+public class Event extends Task {
     private LocalDate startDate;
     private LocalDate endDate;
 

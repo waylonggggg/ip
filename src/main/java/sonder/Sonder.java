@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * The {@code Sonder} class is the main entry point of the application.
+ * It initializes the user interface, task list, storage system, and command parser.
+ * This class is responsible for running the main program loop.
+ */
 public class Sonder {
 
     private Ui ui;
@@ -12,6 +17,11 @@ public class Sonder {
     private Storage storage;
     private Parser parser;
 
+    /**
+     * Constructs a {@code Sonder} instance and initializes the necessary components.
+     *
+     * @param filePath The file path where tasks are stored.
+     */
     public Sonder(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
@@ -19,6 +29,12 @@ public class Sonder {
         this.parser = new Parser(tasks, ui, storage);
     }
 
+    /**
+     * Initializes the task list by loading tasks from storage.
+     * If an error occurs during loading, an empty task list is created.
+     *
+     * @return The initialized {@code TaskList} containing loaded tasks or an empty list if loading fails.
+     */
     private TaskList initialiseTaskList() {
         try {
             storage.fileDirChecker();
@@ -29,6 +45,10 @@ public class Sonder {
         }
     }
 
+    /**
+     * Runs the main program loop, continuously reading user input
+     * and passing commands to the {@code Parser}.
+     */
     public void run() {
         ui.welcomeMessage();
 
@@ -41,11 +61,17 @@ public class Sonder {
 
                 parser.run(input, inputArr, command, length);
             } catch (Exception e) {
-                ui.showErrorMessage(e.getMessage());
+                handleException(e);
             }
         }
     }
 
+    /**
+     * Handles various exceptions that may occur during program execution and
+     * displays appropriate error messages to the user.
+     *
+     * @param e The exception that was thrown.
+     */
     private void handleException(Exception e) {
         if (e instanceof SonderException) {
             ui.showErrorMessage(e.getMessage());
@@ -55,11 +81,18 @@ public class Sonder {
             ui.showErrorMessage("Error occurred while accessing file: " + e.getMessage());
         } else if (e instanceof DateTimeParseException) {
             ui.showErrorMessage("Please enter a valid date.");
+        } else if (e instanceof IllegalArgumentException) {
+            ui.showErrorMessage(e.getMessage());
         } else {
             ui.showErrorMessage("Unexpected error: " + e.getMessage());
         }
     }
 
+    /**
+     * The main method that starts the application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         new Sonder("./data/list.txt").run();
     }

@@ -1,5 +1,6 @@
 package sonder;
 
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -65,6 +66,24 @@ public class Storage {
         return taskList;
     }
 
+    /**
+     * Parses a task from a formatted string and returns the corresponding {@code Task} object.
+     * The input string is expected to be in the format:
+     * <pre>
+     * type | isDone | description | (optional) date(s)
+     * </pre>
+     * where:
+     * <ul>
+     *   <li>{@code type} - "T" for Todo, "D" for Deadline, "E" for Event</li>
+     *   <li>{@code isDone} - "1" if completed, "0" if not</li>
+     *   <li>{@code description} - The task's details</li>
+     *   <li>{@code date(s)} - (Only for Deadline and Event tasks) formatted as "MMM dd yyyy"</li>
+     * </ul>
+     *
+     * @param line The formatted string representing a task.
+     * @return The parsed {@code Task} object (Todo, Deadline, or Event).
+     * @throws IllegalArgumentException If the task type is invalid.
+     */
     private Task parseTask(String line) {
         String[] taskArr = line.split("\\|");
         String type = taskArr[0].trim();
@@ -85,7 +104,7 @@ public class Storage {
                     DateTimeFormatter.ofPattern("MMM dd yyyy"));
             return new Event(desc, isDone, start, end);
         default:
-        throw new IllegalArgumentException("Invalid task type: " + type);
+            throw new IllegalArgumentException("Invalid task type: " + type);
         }
     }
 
@@ -140,7 +159,7 @@ public class Storage {
             }
             file.close();
 
-            String inputStr = buffer.toString();   // for debugging
+            String inputStr = buffer.toString(); // for debugging
 
             FileOutputStream fileOut = new FileOutputStream(this.getFilePath());
             fileOut.write(buffer.toString().getBytes());
@@ -157,12 +176,20 @@ public class Storage {
      * @param t The task to be appended.
      * @throws IOException If an I/O error occurs while writing to the file.
      */
-    public void appendTask(Task t) throws IOException{
+    public void appendTask(Task t) throws IOException {
         FileWriter fw = new FileWriter("./data/list.txt", true);
         fw.write(t.toString() + "\n");
         fw.close();
     }
 
+    /**
+     * Searches for tasks in the file that contain the given input string.
+     *
+     * @param input The search query string.
+     * @return A formatted string listing all matching tasks, each numbered on a new line.
+     * @throws FileNotFoundException If the file containing the tasks cannot be found.
+     * @throws SonderException If the search query is empty after removing the first 4 characters.
+     */
     public String findTask(String input) throws FileNotFoundException, SonderException {
         String taskToFind = input.substring(4).trim();
 
