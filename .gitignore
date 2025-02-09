@@ -19,5 +19,8 @@ bin/
 #javadocs test
 /javadocs/
 
+#checkstyle
+/config/
+
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
