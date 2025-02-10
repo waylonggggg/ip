@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import javafx.application.Platform;
+
 /**
  * The {@code Parser} class is responsible for processing user input,
  * executing corresponding commands, and interacting with the {@code TaskList},
@@ -39,44 +41,36 @@ public class Parser {
      * @throws FileNotFoundException If the file containing tasks cannot be found.
      * @throws IOException           If an error occurs while reading or writing to the file.
      */
-    public void run(String input, String[] inputArr, String command, int length) throws SonderException,
+    public String run(String input, String[] inputArr, String command, int length) throws SonderException,
             FileNotFoundException, IOException {
         switch (command) {
         case "bye":
-            ui.goodbyeMessage();
-            return;
+            Platform.exit();
+            return ui.goodbyeMessage();
 
         case "list":
-            handleListCommand();
-            break;
+            return handleListCommand();
 
         case "find":
-            ui.findTaskMessage(storage.findTask(input));
-            break;
+            return ui.findTaskMessage(storage.findTask(input));
 
         case "mark":
-            this.markHelper("mark", inputArr, length);
-            break;
+            return markHelper("mark", inputArr, length);
 
         case "unmark":
-            this.markHelper("unmark", inputArr, length);
-            break;
+            return markHelper("unmark", inputArr, length);
 
         case "todo":
-            this.taskHelper("todo", input, inputArr, length);
-            break;
+            return taskHelper("todo", input, inputArr, length);
 
         case "deadline":
-            this.taskHelper("deadline", input, inputArr, length);
-            break;
+            return taskHelper("deadline", input, inputArr, length);
 
         case "event":
-            this.taskHelper("event", input, inputArr, length);
-            break;
+            return taskHelper("event", input, inputArr, length);
 
         case "delete":
-            this.deleteHelper(inputArr, length);
-            break;
+            return deleteHelper(inputArr, length);
 
         default:
             throw new SonderException("I don't know what that means. Sorry! :(");
@@ -90,11 +84,11 @@ public class Parser {
      * @throws FileNotFoundException If the task file is missing.
      * @throws IOException           If an error occurs while reading the file.
      */
-    private void handleListCommand() throws SonderException, FileNotFoundException, IOException {
+    private String handleListCommand() throws SonderException, FileNotFoundException, IOException {
         if (TaskList.getTaskListSize() == 0) {
             throw new SonderException("Your list is empty!");
         }
-        storage.getList();
+        return storage.getList();
     }
 
     /**
@@ -105,7 +99,7 @@ public class Parser {
      * @param len    The length of the input array.
      * @throws SonderException If an invalid index is given.
      */
-    private void markHelper(String action, String[] arr, int len) throws SonderException {
+    private String markHelper(String action, String[] arr, int len) throws SonderException {
         validateSingleIndex(arr, len);
         int index = Integer.parseInt(arr[1]);
         validateIndexRange(index);
@@ -114,12 +108,13 @@ public class Parser {
         if (action.equals("mark")) {
             task.setDone();
             storage.fileListAmendHelper("mark", index - 1);
-            ui.setDoneMessage(index);
+            return ui.setDoneMessage(index);
         } else if (action.equals("unmark")) {
             task.setUndone();
             storage.fileListAmendHelper("unmark", index - 1);
-            ui.setUndoneMessage(index);
+            return ui.setUndoneMessage(index);
         }
+        throw new SonderException("Invalid action: " + action);
     }
 
     /**
@@ -171,20 +166,17 @@ public class Parser {
      * @throws SonderException If input is invalid.
      * @throws IOException     If an error occurs while saving the task.
      */
-    private void taskHelper(String action, String input, String[] arr, int len) throws SonderException, IOException {
+    private String taskHelper(String action, String input, String[] arr, int len) throws SonderException, IOException {
         if (len == 1) {
             throw new SonderException("Please input a task!");
         }
         switch (action) {
         case "todo":
-            addTodoTask(input);
-            break;
+            return addTodoTask(input);
         case "deadline":
-            addDeadlineTask(input);
-            break;
+            return addDeadlineTask(input);
         case "event":
-            addEventTask(input);
-            break;
+            return addEventTask(input);
         default:
             throw new IllegalArgumentException("Invalid task action: " + action);
         }
@@ -196,12 +188,12 @@ public class Parser {
      * @param input The full user input string containing the task description.
      * @throws IOException If an error occurs while saving the task to storage.
      */
-    private void addTodoTask(String input) throws IOException {
+    private String addTodoTask(String input) throws IOException {
         String taskDescription = input.substring(5).trim();
         Task task = new Todo(taskDescription, false);
         tasks.addTask(task);
         storage.appendTask(task);
-        ui.addTaskMessage(task);
+        return ui.addTaskMessage(task);
     }
 
     /**
@@ -211,7 +203,7 @@ public class Parser {
      * @throws SonderException If the deadline is missing or invalid.
      * @throws IOException If an error occurs while saving the task to storage.
      */
-    private void addDeadlineTask(String input) throws SonderException, IOException {
+    private String addDeadlineTask(String input) throws SonderException, IOException {
         if (!input.contains("/by ")) {
             throw new SonderException("Please include a due date!");
         }
@@ -228,7 +220,7 @@ public class Parser {
         Task task = new Deadline(taskDescription, false, date);
         tasks.addTask(task);
         storage.appendTask(task);
-        ui.addTaskMessage(task);
+        return ui.addTaskMessage(task);
     }
 
     /**
@@ -238,7 +230,7 @@ public class Parser {
      * @throws SonderException If the start and/or end date is missing or invalid.
      * @throws IOException If an error occurs while saving the task to storage.
      */
-    private void addEventTask(String input) throws SonderException, IOException {
+    private String addEventTask(String input) throws SonderException, IOException {
         if (!input.contains("/from ") || !input.contains("/to ")) {
             throw new SonderException("Please include a start and/or end date");
         }
@@ -257,7 +249,7 @@ public class Parser {
         Task task = new Event(taskDescription, false, startDate, endDate);
         tasks.addTask(task);
         storage.appendTask(task);
-        ui.addTaskMessage(task);
+        return ui.addTaskMessage(task);
     }
 
     /**
@@ -267,7 +259,7 @@ public class Parser {
      * @param len The length of the input array.
      * @throws SonderException If an invalid index is given.
      */
-    private void deleteHelper(String[] arr, int len) throws SonderException {
+    private String deleteHelper(String[] arr, int len) throws SonderException {
         validateSingleIndex(arr, len);
         int index = Integer.parseInt(arr[1]);
         validateIndexRange(len);
@@ -275,7 +267,7 @@ public class Parser {
         String oldTask = TaskList.getTask(index - 1).toString();
         tasks.delete(index - 1);
         storage.fileListAmendHelper("delete", index - 1);
-        ui.deleteMessage(oldTask);
+        return ui.deleteMessage(oldTask);
 
     }
 
