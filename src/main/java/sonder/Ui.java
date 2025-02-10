@@ -20,22 +20,22 @@ public class Ui {
     /**
      * Displays a welcome message to the user.
      */
-    public void welcomeMessage() {
+    public String welcomeMessage() {
         String message = "____________________________________________________________\n"
                 + "Hello! I'm Sonder, your personal chatbot!\n"
                 + "What can I do for you!\n"
                 + "____________________________________________________________";
-        System.out.println(message);
+        return message;
     }
 
     /**
      * Displays a goodbye message when the user exits the program.
      */
-    public void goodbyeMessage() {
-        System.out.println("____________________________________________________________\n"
+    public String goodbyeMessage() {
+        String message = "____________________________________________________________\n"
                 + "Bye. Hope to see you again soon!\n"
-                + "____________________________________________________________"
-        );
+                + "____________________________________________________________";
+        return message;
     }
 
     /**
@@ -43,12 +43,12 @@ public class Ui {
      *
      * @param index The index of the task that has been marked as done.
      */
-    public void setDoneMessage(int index) {
-        System.out.println("____________________________________________________________\n"
+    public String setDoneMessage(int index) {
+        String message = "____________________________________________________________\n"
                 + "Nice! I've marked this task as done:\n"
                 + TaskList.getTask(index) + "\n"
-                + "____________________________________________________________"
-        );
+                + "____________________________________________________________";
+        return message;
     }
 
     /**
@@ -56,12 +56,12 @@ public class Ui {
      *
      * @param index The index of the task that has been marked as not done.
      */
-    public void setUndoneMessage(int index) {
-        System.out.println("____________________________________________________________\n"
+    public String setUndoneMessage(int index) {
+        String message = "____________________________________________________________\n"
                 + "OK, I've marked this task as not done yet:\n"
                 + TaskList.getTask(index) + "\n"
-                + "____________________________________________________________"
-        );
+                + "____________________________________________________________";
+        return message;
     }
 
     /**
@@ -69,13 +69,13 @@ public class Ui {
      *
      * @param t The task that was added.
      */
-    public void addTaskMessage(Task t) {
-        System.out.println("____________________________________________________________\n"
+    public String addTaskMessage(Task t) {
+        String message = "____________________________________________________________\n"
                 + "Got it. I've added this task:\n"
                 + t.toString() + "\n"
                 + String.format("Now you have %d tasks in the list", TaskList.getTaskListSize()) + "\n"
-                + "____________________________________________________________"
-        );
+                + "____________________________________________________________";
+        return message;
     }
 
     /**
@@ -83,13 +83,13 @@ public class Ui {
      *
      * @param oldTask The task that was removed.
      */
-    public void deleteMessage(String oldTask) {
-        System.out.println("____________________________________________________________\n"
+    public String deleteMessage(String oldTask) {
+        String message = "____________________________________________________________\n"
                 + "Noted. I've removed this task:\n"
                 + oldTask + "\n"
                 + String.format("Now you have %d tasks in the list\n", TaskList.getTaskListSize())
-                + "____________________________________________________________"
-        );
+                + "____________________________________________________________";
+        return message;
     }
 
     /**
@@ -97,15 +97,15 @@ public class Ui {
      *
      * @param input The formatted list of matching tasks, or an empty string if no match is found.
      */
-    public void findTaskMessage(String input) {
+    public String findTaskMessage(String input) {
         if (input.isEmpty()) {
-            System.out.println("Sorry, I couldn't find your task! :(");
+            return "Sorry, I couldn't find your task! :(";
         } else {
-            System.out.println("____________________________________________________________\n"
+            String message = "____________________________________________________________\n"
                     + "Here are the matching tasks in your list:\n"
                     + input
-                    + "____________________________________________________________"
-            );
+                    + "____________________________________________________________";
+            return message;
         }
     }
 
@@ -114,8 +114,8 @@ public class Ui {
      *
      * @param message The error message to be displayed.
      */
-    public void showErrorMessage(String message) {
-        System.out.println("Error: " + message);
+    public String showErrorMessage(String message) {
+        return "Error: " + message;
     }
 
     /**

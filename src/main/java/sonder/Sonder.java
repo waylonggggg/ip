@@ -89,6 +89,22 @@ public class Sonder {
     }
 
     /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        try {
+            String trimmedInput = input.trim();
+            String[] inputArr = trimmedInput.split("\\s+");
+            String command = inputArr[0].toLowerCase();
+            int length = inputArr.length;
+
+            return parser.run(input, inputArr, command, length);
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    /**
      * The main method that starts the application.
      *
      * @param args Command-line arguments (not used).

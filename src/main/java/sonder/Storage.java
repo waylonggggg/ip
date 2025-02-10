@@ -115,20 +115,18 @@ public class Storage {
      * @throws FileNotFoundException If the file is not found.
      * @throws IOException If an I/O error occurs.
      */
-    public void getList() throws FileNotFoundException, IOException {
+    public String getList() throws FileNotFoundException, IOException {
         File f = new File("./data/list.txt");
-        if (f.exists()) {
-            Scanner sc = new Scanner(f);
-            int counter = 1;
-            System.out.println("____________________________________________________________");
-            while (sc.hasNext()) {
-                System.out.println(counter + ". " + sc.nextLine());
-                counter++;
-            }
-            System.out.println("____________________________________________________________");
-        } else {
-            f.createNewFile();
+        Scanner sc = new Scanner(f);
+        int counter = 1;
+        StringBuilder sb = new StringBuilder();
+        sb.append("____________________________________________________________\n");
+        while (sc.hasNext()) {
+            sb.append(counter).append(". ").append(sc.nextLine()).append("\n");
+            counter++;
         }
+        sb.append("____________________________________________________________");
+        return sb.toString();
     }
 
     /**
