@@ -46,10 +46,12 @@ public class Sonder {
             TaskList taskList = new TaskList(storage.load());
             assert taskList != null : "initialiseTaskList() should never return null";
             return taskList;
-        } catch (Exception e) {
-            ui.showErrorMessage("Initialization error: " + e.getMessage());
-            return new TaskList(new ArrayList<Task>()); // Return an empty task list
+        } catch (FileNotFoundException e) {
+            ui.showErrorMessage("Task file not found, creating a new task list.");
+        } catch (IOException e) {
+            ui.showErrorMessage("Error loading tasks from storage: " + e.getMessage());
         }
+        return new TaskList(new ArrayList<>()); // Return an empty task list if loading fails
     }
 
     /**
@@ -106,8 +108,10 @@ public class Sonder {
             int length = inputArr.length;
 
             return parser.run(input, inputArr, command, length);
-        } catch (Exception e) {
+        } catch (SonderException e) {
             return "Error: " + e.getMessage();
+        } catch (Exception e) {
+            return "An unexpected error occurred. Please try again.";
         }
     }
 
@@ -117,6 +121,7 @@ public class Sonder {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
-        new Sonder("./data/list.txt").run();
+        Sonder sonder = new Sonder("./data/list.txt");
+        sonder.run();
     }
 }

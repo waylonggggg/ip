@@ -50,31 +50,22 @@ public class Parser {
         case "bye":
             Platform.exit();
             return ui.goodbyeMessage();
-
         case "list":
             return handleListCommand();
-
         case "find":
             return ui.findTaskMessage(storage.findTask(input));
-
         case "mark":
             return markHelper("mark", inputArr, length);
-
         case "unmark":
             return markHelper("unmark", inputArr, length);
-
         case "todo":
             return taskHelper("todo", input, inputArr, length);
-
         case "deadline":
             return taskHelper("deadline", input, inputArr, length);
-
         case "event":
             return taskHelper("event", input, inputArr, length);
-
         case "delete":
             return deleteHelper(inputArr, length);
-
         default:
             throw new SonderException("I don't know what that means. Sorry! :(");
         }
@@ -103,51 +94,39 @@ public class Parser {
      * @throws SonderException If an invalid index is given.
      */
     private String markHelper(String action, String[] arr, int len) throws SonderException {
-        validateSingleIndex(arr, len);
+        validateIndex(arr, len);
         int index = Integer.parseInt(arr[1]);
-        validateIndexRange(index);
 
         assert index > 0 && index <= TaskList.getTaskListSize() : "Invalid index used in markHelper";
 
         Task task = TaskList.getTask(index - 1);
-        if (action.equals("mark")) {
+        boolean isMarking = action.equals("mark");
+        if (isMarking) {
             task.setDone();
-            storage.fileListAmendHelper("mark", index - 1);
-            return ui.setDoneMessage(index);
-        } else if (action.equals("unmark")) {
+        } else {
             task.setUndone();
-            storage.fileListAmendHelper("unmark", index - 1);
-            return ui.setUndoneMessage(index);
         }
-        throw new SonderException("Invalid action: " + action);
+        storage.fileListAmendHelper(action, index - 1);
+        return isMarking ? ui.setDoneMessage(index) : ui.setUndoneMessage(index);
     }
 
     /**
-     * Validates if the given index is within a valid range.
+     * Validates the index provided in the input array.
+     * Ensures that the input has exactly two elements and that the second element is a valid numeric index.
+     * Throws an exception if the index is not a positive integer within the valid range of task numbers.
      *
-     * @param index The task index to validate.
-     * @throws SonderException If the index is out of range.
+     * @param arr The input array containing the command and the task number.
+     * @param len The expected length of the input array.
+     * @throws SonderException If the input length is incorrect, the task number is not numeric,
+     *                         or the index is out of the valid range.
      */
-    private void validateIndexRange(int index) throws SonderException {
+    private void validateIndex(String[] arr, int len) throws SonderException {
+        if (len != 2 || !isNumeric(arr[1])) {
+            throw new SonderException("Please provide a valid task number.");
+        }
+        int index = Integer.parseInt(arr[1]);
         if (index <= 0 || index > TaskList.getTaskListSize()) {
-            throw new SonderException("Please input a valid index");
-        }
-    }
-
-    /**
-     * Validates if a single numerical index is provided.
-     *
-     * @param arr The input array.
-     * @param len The length of the input array.
-     * @throws SonderException If the input is missing, too long, or not numeric.
-     */
-    private void validateSingleIndex(String[] arr, int len) throws SonderException {
-        if (len == 1) {
-            throw new SonderException("Please input a number!");
-        } else if (len > 2) {
-            throw new SonderException("Invalid input!");
-        } else if (!isNumeric(arr[1])) {
-            throw new SonderException("Input numbers only please");
+            throw new SonderException("Index out of range. Please enter a valid task number.");
         }
     }
 
@@ -276,9 +255,8 @@ public class Parser {
      * @throws SonderException If an invalid index is given.
      */
     private String deleteHelper(String[] arr, int len) throws SonderException {
-        validateSingleIndex(arr, len);
+        validateIndex(arr, len);
         int index = Integer.parseInt(arr[1]);
-        validateIndexRange(len);
 
         assert index > 0 && index <= TaskList.getTaskListSize() : "Invalid index used in markHelper";
 
