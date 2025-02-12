@@ -20,6 +20,7 @@ public class Storage {
      * @param filePath The path to the file where tasks will be saved and loaded.
      */
     public Storage(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "Storage file path cannot be null or empty";
         this.filePath = filePath;
     }
 
@@ -39,6 +40,8 @@ public class Storage {
             if (!f.exists()) {
                 f.createNewFile();
             }
+
+            assert f.exists() : "File should exist after fileDirChecker() runs";
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -63,6 +66,8 @@ public class Storage {
         while (sc.hasNext()) {
             taskList.add(parseTask(sc.nextLine()));
         }
+
+        assert taskList != null : "load() should never return null";
         return taskList;
     }
 
@@ -86,6 +91,8 @@ public class Storage {
      */
     private Task parseTask(String line) {
         String[] taskArr = line.split("\\|");
+        assert taskArr.length >= 3 : "Invalid task format in parseTask()";
+
         String type = taskArr[0].trim();
         boolean isDone = taskArr[1].trim().equals("1");
         String desc = taskArr[2].trim();
@@ -117,6 +124,8 @@ public class Storage {
      */
     public String getList() throws FileNotFoundException, IOException {
         File f = new File("./data/list.txt");
+        assert f.exists() : "File should exist when calling getList()";
+
         Scanner sc = new Scanner(f);
         int counter = 1;
         StringBuilder sb = new StringBuilder();
@@ -137,6 +146,8 @@ public class Storage {
      */
     public void fileListAmendHelper(String action, int index) {
         try {
+            assert index >= 0 && index < TaskList.getTaskListSize() : "Index out of bounds in fileListAmendHelper()";
+
             BufferedReader file = new BufferedReader(new FileReader(this.getFilePath()));
             StringBuffer buffer = new StringBuffer();
             Task task = TaskList.getTask(index);
@@ -194,6 +205,8 @@ public class Storage {
         if (taskToFind.isEmpty()) {
             throw new SonderException("Please input a task to find!");
         }
+
+        assert !taskToFind.isEmpty() : "findTask() should not run with an empty query";
 
         Scanner sc = new Scanner(new File(getFilePath()));
         ArrayList<String> taskArr = new ArrayList<>();

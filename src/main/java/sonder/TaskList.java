@@ -16,6 +16,7 @@ public class TaskList {
      * @param taskList The list of tasks to initialize the task manager with.
      */
     public TaskList(ArrayList<Task> taskList) {
+        assert taskList != null : "TaskList cannot be initialized with a null list";
         TaskList.taskList = taskList;
     }
 
@@ -26,6 +27,7 @@ public class TaskList {
      * @throws IOException If an I/O error occurs while adding the task.
      */
     public void addTask(Task t) throws IOException {
+        assert taskList != null : "TaskList must be initialized before adding a task";
         taskList.add(t);
     }
 
@@ -35,6 +37,7 @@ public class TaskList {
      * @param index The index of the task to be removed.
      */
     public void delete(int index) {
+        assert index >= 0 && index < taskList.size() : "Index out of bounds in delete()";
         taskList.remove(index);
     }
 
@@ -45,6 +48,7 @@ public class TaskList {
      * @return The {@code Task} at the specified index.
      */
     public static Task getTask(int index) {
+        assert index >= 0 && index < taskList.size() : "Index out of bounds in getTask()";
         return taskList.get(index);
     }
 
@@ -54,6 +58,7 @@ public class TaskList {
      * @return The size of the task list as an integer.
      */
     public static int getTaskListSize() {
+        assert taskList != null : "TaskList must be initialized before calling getTaskListSize()";
         return taskList.size();
     }
 }
