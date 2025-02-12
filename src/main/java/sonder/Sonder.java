@@ -27,6 +27,11 @@ public class Sonder {
         this.storage = new Storage(filePath);
         this.tasks = initialiseTaskList();
         this.parser = new Parser(tasks, ui, storage);
+
+        assert ui != null : "Ui instance should not be null";
+        assert storage != null : "Storage instance should not be null";
+        assert tasks != null : "TaskList instance should not be null";
+        assert parser != null : "Parser instance should not be null";
     }
 
     /**
@@ -38,7 +43,9 @@ public class Sonder {
     private TaskList initialiseTaskList() {
         try {
             storage.fileDirChecker();
-            return new TaskList(storage.load());
+            TaskList taskList = new TaskList(storage.load());
+            assert taskList != null : "initialiseTaskList() should never return null";
+            return taskList;
         } catch (FileNotFoundException e) {
             ui.showErrorMessage("Task file not found, creating a new task list.");
         } catch (IOException e) {

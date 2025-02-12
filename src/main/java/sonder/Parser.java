@@ -25,6 +25,9 @@ public class Parser {
      * @param storage The storage system for reading and writing tasks.
      */
     public Parser(TaskList tasks, Ui ui, Storage storage) {
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
         this.tasks = tasks;
         this.ui = ui;
         this.storage = storage;
@@ -93,6 +96,8 @@ public class Parser {
     private String markHelper(String action, String[] arr, int len) throws SonderException {
         validateIndex(arr, len);
         int index = Integer.parseInt(arr[1]);
+
+        assert index > 0 && index <= TaskList.getTaskListSize() : "Invalid index used in markHelper";
 
         Task task = TaskList.getTask(index - 1);
         boolean isMarking = action.equals("mark");
@@ -169,6 +174,9 @@ public class Parser {
      */
     private String addTodoTask(String input) throws IOException {
         String taskDescription = input.substring(5).trim();
+
+        assert !taskDescription.isEmpty() : "Task description cannot be empty in addDeadlineTask";
+
         Task task = new Todo(taskDescription, false);
         tasks.addTask(task);
         storage.appendTask(task);
@@ -190,6 +198,9 @@ public class Parser {
         String[] split = input.split("/by");
         String taskDescription = split[0].substring(9).trim();
         String deadline = split[1].trim();
+
+        assert !taskDescription.isEmpty() : "Task description cannot be empty in addDeadlineTask";
+        assert !deadline.isEmpty() : "Deadline cannot be empty in addDeadlineTask";
 
         if (!isValidDate(deadline)) {
             throw new SonderException("Please include a valid due date!");
@@ -225,6 +236,11 @@ public class Parser {
 
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
+
+        assert startDate != null : "Start date cannot be null in addEventTask";
+        assert endDate != null : "End date cannot be null in addEventTask";
+        assert startDate.isBefore(endDate) : "Start date must be before end date in addEventTask";
+
         Task task = new Event(taskDescription, false, startDate, endDate);
         tasks.addTask(task);
         storage.appendTask(task);
@@ -241,6 +257,8 @@ public class Parser {
     private String deleteHelper(String[] arr, int len) throws SonderException {
         validateIndex(arr, len);
         int index = Integer.parseInt(arr[1]);
+
+        assert index > 0 && index <= TaskList.getTaskListSize() : "Invalid index used in markHelper";
 
         String oldTask = TaskList.getTask(index - 1).toString();
         storage.fileListAmendHelper("delete", index - 1);

@@ -15,6 +15,7 @@ public class Ui {
      */
     public Ui() {
         sc = new Scanner(System.in);
+        assert sc != null : "Scanner instance should not be null in Ui";
     }
 
     /**
@@ -44,6 +45,8 @@ public class Ui {
      * @param index The index of the task that has been marked as done.
      */
     public String setDoneMessage(int index) {
+        assert index >= 0 && index < TaskList.getTaskListSize() : "Index out of bounds in setDoneMessage()";
+
         String message = "____________________________________________________________\n"
                 + "Nice! I've marked this task as done:\n"
                 + TaskList.getTask(index) + "\n"
@@ -57,6 +60,8 @@ public class Ui {
      * @param index The index of the task that has been marked as not done.
      */
     public String setUndoneMessage(int index) {
+        assert index >= 0 && index < TaskList.getTaskListSize() : "Index out of bounds in setDoneMessage()";
+
         String message = "____________________________________________________________\n"
                 + "OK, I've marked this task as not done yet:\n"
                 + TaskList.getTask(index) + "\n"
@@ -70,6 +75,8 @@ public class Ui {
      * @param t The task that was added.
      */
     public String addTaskMessage(Task t) {
+        assert t != null : "Task cannot be null in addTaskMessage()";
+
         String message = "____________________________________________________________\n"
                 + "Got it. I've added this task:\n"
                 + t.toString() + "\n"
@@ -84,6 +91,8 @@ public class Ui {
      * @param oldTask The task that was removed.
      */
     public String deleteMessage(String oldTask) {
+        assert oldTask != null && !oldTask.trim().isEmpty() : "Deleted task description cannot be null or empty in deleteMessage()";
+
         String message = "____________________________________________________________\n"
                 + "Noted. I've removed this task:\n"
                 + oldTask + "\n"
