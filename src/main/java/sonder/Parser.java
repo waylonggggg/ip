@@ -265,8 +265,8 @@ public class Parser {
         validateIndexRange(len);
 
         String oldTask = TaskList.getTask(index - 1).toString();
-        tasks.delete(index - 1);
         storage.fileListAmendHelper("delete", index - 1);
+        tasks.delete(index - 1);
         return ui.deleteMessage(oldTask);
 
     }
