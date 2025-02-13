@@ -200,7 +200,7 @@ public class Storage {
      * @throws SonderException If the search query is empty after removing the first 4 characters.
      */
     public String findTask(String input) throws FileNotFoundException, SonderException {
-        String taskToFind = input.substring(4).trim();
+        String taskToFind = input.substring(4).trim().toLowerCase();
 
         if (taskToFind.isEmpty()) {
             throw new SonderException("Please input a task to find!");
@@ -213,7 +213,7 @@ public class Storage {
 
         while (sc.hasNext()) {
             String taskLine = sc.nextLine();
-            if (taskLine.toLowerCase().contains(taskToFind.toLowerCase())) {
+            if (taskLine.toLowerCase().contains(taskToFind)) {
                 taskArr.add(taskLine);
             }
         }
