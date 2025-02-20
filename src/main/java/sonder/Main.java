@@ -22,6 +22,8 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            System.out.println("Setting stage title to Sonder");
+            stage.setTitle("Sonder");
             fxmlLoader.<MainWindow>getController().setSonder(sonder); // inject the Duke instance
             stage.show();
         } catch (IOException e) {

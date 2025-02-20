@@ -107,7 +107,7 @@ public class Parser {
             task.setUndone();
         }
         storage.fileListAmendHelper(action, index - 1);
-        return isMarking ? ui.setDoneMessage(index) : ui.setUndoneMessage(index);
+        return isMarking ? ui.setDoneMessage(index - 1) : ui.setUndoneMessage(index - 1);
     }
 
     /**
